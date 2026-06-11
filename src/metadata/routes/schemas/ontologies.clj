@@ -24,3 +24,8 @@
   (merge TargetFilterRequest
          {:attrs
           (describe [String] "The metadata attributes that store class IRIs for the given ontology")}))
+
+(s/defschema TargetHierarchiesFilterRequest
+  (merge TargetFilterRequest
+         {:attrs
+          (describe [String] "The metadata attributes that store class IRIs for the given ontology")}))

@@ -202,3 +202,17 @@
         filter-root (partial filter-root-hierarchy ontology-version iri-set)
         hierarchies (map (comp filter-root :class_iri) roots)]
     {:hierarchies (remove nil? hierarchies)}))
+
+(defn filter-targets-hierarchies
+  "Filters Ontology Hierarchies saved for the given ontology-version for multiple targets.
+   Returns per-target results so each target gets only the hierarchy leaf-classes it is tagged under."
+  [ontology-version attrs target-types target-ids]
+  (let [roots     (ont-db/get-ontology-hierarchy-roots ontology-version)
+        all-avus  (avu-db/get-avus-by-attrs target-types target-ids attrs)
+        by-target (group-by :target_id all-avus)]
+    {:targets (mapv (fn [tid]
+                      (let [iri-set     (set (map :value (get by-target tid [])))
+                            filter-root (partial filter-root-hierarchy ontology-version iri-set)
+                            hierarchies (remove nil? (map (comp filter-root :class_iri) roots))]
+                        {:id tid :hierarchies (vec hierarchies)}))
+                    target-ids)}))
