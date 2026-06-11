@@ -207,12 +207,21 @@
   "Filters Ontology Hierarchies saved for the given ontology-version for multiple targets.
    Returns per-target results so each target gets only the hierarchy leaf-classes it is tagged under."
   [ontology-version attrs target-types target-ids]
-  (let [roots     (ont-db/get-ontology-hierarchy-roots ontology-version)
-        all-avus  (avu-db/get-avus-by-attrs target-types target-ids attrs)
-        by-target (group-by :target_id all-avus)]
+  (let [roots          (ont-db/get-ontology-hierarchy-roots ontology-version)
+        ;; Format each root hierarchy once (R DB queries), then reuse in-memory per target.
+        formatted-roots (mapv (fn [{:keys [class_iri]}]
+                                {:iri class_iri
+                                 :hierarchy (format-hierarchy ontology-version class_iri)})
+                              roots)
+        all-avus        (avu-db/get-avus-by-attrs target-types target-ids attrs)
+        by-target       (group-by :target_id all-avus)]
     {:targets (mapv (fn [tid]
                       (let [iri-set     (set (map :value (get by-target tid [])))
-                            filter-root (partial filter-root-hierarchy ontology-version iri-set)
-                            hierarchies (remove nil? (map (comp filter-root :class_iri) roots))]
-                        {:id tid :hierarchies (vec hierarchies)}))
+                            hierarchies (if (empty? iri-set)
+                                          []
+                                          (->> formatted-roots
+                                               (map #(util/filter-hierarchy iri-set (:hierarchy %)))
+                                               (remove nil?)
+                                               vec))]
+                        {:id tid :hierarchies hierarchies}))
                     target-ids)}))
