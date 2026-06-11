@@ -209,10 +209,7 @@
   [ontology-version attrs target-types target-ids]
   (let [roots          (ont-db/get-ontology-hierarchy-roots ontology-version)
         ;; Format each root hierarchy once (R DB queries), then reuse in-memory per target.
-        formatted-roots (mapv (fn [{:keys [class_iri]}]
-                                {:iri class_iri
-                                 :hierarchy (format-hierarchy ontology-version class_iri)})
-                              roots)
+        formatted-roots (mapv #(format-hierarchy ontology-version (:class_iri %)) roots)
         all-avus        (avu-db/get-avus-by-attrs target-types target-ids attrs)
         by-target       (group-by :target_id all-avus)]
     {:targets (mapv (fn [tid]
@@ -220,7 +217,7 @@
                             hierarchies (if (empty? iri-set)
                                           []
                                           (->> formatted-roots
-                                               (map #(util/filter-hierarchy iri-set (:hierarchy %)))
+                                               (map #(util/filter-hierarchy iri-set %))
                                                (remove nil?)
                                                vec))]
                         {:id tid :hierarchies hierarchies}))
