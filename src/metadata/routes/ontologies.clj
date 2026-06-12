@@ -36,6 +36,17 @@
             returning only the hierarchy's leaf-classes that are associated with the given target."
            (ok (service/filter-target-hierarchies ontology-version attrs type id)))
 
+    (POST "/:ontology-version/filter-targets-batch" []
+           :path-params [ontology-version :- schema/OntologyVersionParam]
+           :query [{:keys [user]} StandardUserQueryParams]
+           :body [{:keys [target-types target-ids attrs]} TargetHierarchiesFilterRequest]
+           :return schema/TargetOntologyHierarchiesList
+           :summary "Filter Hierarchies for Multiple Targets"
+           :description
+           "Filters Ontology Hierarchies saved for the given `ontology-version` for multiple targets,
+            returning per-target leaf-class hierarchies."
+           (ok (service/filter-targets-hierarchies ontology-version attrs target-types target-ids)))
+
     (POST "/:ontology-version/filter-targets" []
            :path-params [ontology-version :- schema/OntologyVersionParam]
            :query [{:keys [user label]} OntologySearchParams]
