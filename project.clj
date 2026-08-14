@@ -23,20 +23,23 @@
   ;; uberjar. Their project.clj files no longer declare it; the fix simply has
   ;; not been released yet. Drop this once those artifacts are re-released.
   :exclusions [cider/cider-nrepl]
-  ;; These are the versions Leiningen already resolves today -- they are read
-  ;; off the resolved classpath, not copied from lein's "Consider using these
-  ;; :managed-dependencies" hint, which names the version that LOST the
-  ;; conflict and would therefore be a silent upgrade. Pinning the resolved
-  ;; version records the existing choice as deliberate and leaves the runtime
-  ;; classpath byte-for-byte unchanged. Re-derive this block whenever one of
-  ;; the dependencies that arbitrates it is bumped.
-  ;; The jackson-* artifacts are the one group that must move together: mixing
-  ;; minors across core/databind/annotations risks NoSuchMethodError at runtime
-  ;; rather than a resolution failure. cheshire 6.2.0 brings core/cbor/smile at
-  ;; 2.21.1, so databind is aligned to match and jackson-annotations is pinned
-  ;; to the 2.21 that databind 2.21.1 asks for (annotations uses a minor-only
-  ;; version scheme). Without this, owlapi-rio's transitive 2.13.5 wins by
-  ;; nearest-wins and pairs 2.13 annotations with 2.21 databind.
+  ;; Every entry here except the jackson-* group records a version Leiningen
+  ;; already resolves. Those are read off the resolved classpath rather than
+  ;; copied from lein's "Consider using these :managed-dependencies" hint --
+  ;; the hint names the version that LOST the conflict, so pasting it would be
+  ;; a silent upgrade. Pinning the resolved version records the existing choice
+  ;; as deliberate and leaves the runtime classpath unchanged.
+  ;;
+  ;; The jackson-* entries are the deliberate exception. Those artifacts must
+  ;; move together -- mixing minors across core/databind/annotations surfaces as
+  ;; NoSuchMethodError at runtime rather than as a resolution failure -- and the
+  ;; cheshire 6 upgrade left them spread across 2.13/2.18/2.21. cheshire 6.2.0
+  ;; brings core/cbor/smile at 2.21.1, so databind is aligned to match and
+  ;; annotations pinned to the 2.21 that databind 2.21.1 declares (annotations
+  ;; uses a minor-only version scheme). Without the annotations pin,
+  ;; owlapi-rio's transitive 2.13.5 wins by nearest-wins.
+  ;;
+  ;; Re-derive this block whenever a dependency that arbitrates it is bumped.
   :managed-dependencies [[clj-http "3.13.0"]
                          [com.fasterxml.jackson.core/jackson-annotations "2.21"]
                          [com.fasterxml.jackson.core/jackson-core "2.21.1"]
