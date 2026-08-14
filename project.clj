@@ -14,24 +14,24 @@
             :url "https://cyverse.org/license"}
   :manifest {"Git-Ref" ~(git-ref)}
   :dependencies [[org.clojure/clojure "1.12.5"]
-                 [net.sourceforge.owlapi/owlapi-api "5.5.0"
+                 [net.sourceforge.owlapi/owlapi-api "5.5.1"
                   :exclusions [[org.slf4j/slf4j-api] [commons-io]]]
-                 [net.sourceforge.owlapi/owlapi-apibinding "5.5.0"
+                 [net.sourceforge.owlapi/owlapi-apibinding "5.5.1"
                   :exclusions [[org.slf4j/slf4j-api] [commons-io]]]
                  [net.sourceforge.owlapi/owlapi-reasoner "3.3"
                   :exclusions [[org.slf4j/slf4j-api] [commons-io]]]
                  [me.raynes/fs "1.4.6"]
-                 [cheshire "5.13.0"]
-                 [org.clojure/data.csv "1.1.0"]
-                 [com.novemberain/langohr "5.4.0"
+                 [cheshire "6.2.0"]
+                 [org.clojure/data.csv "1.1.1"]
+                 [com.novemberain/langohr "5.6.0"
                   :exclusions [org.slf4j/slf4j-api]]
                  [javax.servlet/servlet-api "2.5"]
-                 [org.cyverse/clojure-commons "3.0.9"]
+                 [org.cyverse/clojure-commons "3.0.12"]
                  [org.cyverse/common-cfg "2.8.3"]
                  [org.cyverse/common-cli "2.8.2"]
-                 [org.cyverse/common-swagger-api "3.4.18"]
+                 [org.cyverse/common-swagger-api "3.4.22"]
                  [org.cyverse/kameleon "3.0.10"]
-                 [org.cyverse/service-logging "2.8.4"]
+                 [org.cyverse/service-logging "2.8.5"]
                  [ring/ring-core "1.12.2"]
                  [ring/ring-jetty-adapter "1.12.2"]
                  [sanitize-filename "0.1.0"]
