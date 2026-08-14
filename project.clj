@@ -13,7 +13,7 @@
   :license {:name "BSD Standard License"
             :url "https://cyverse.org/license"}
   :manifest {"Git-Ref" ~(git-ref)}
-  :dependencies [[org.clojure/clojure "1.11.4"]
+  :dependencies [[org.clojure/clojure "1.12.5"]
                  [net.sourceforge.owlapi/owlapi-api "5.5.0"
                   :exclusions [[org.slf4j/slf4j-api] [commons-io]]]
                  [net.sourceforge.owlapi/owlapi-apibinding "5.5.0"
@@ -43,7 +43,7 @@
              ;; so that schema enum values can be loaded from the db
              :uberjar {:aot [#"metadata.(?!routes).*"]}}
   :plugins [[jonase/eastwood "1.4.3"]
-            [lein-ancient "0.7.0"]
+            [lein-ancient "1.0.0"]
             [test2junit "1.4.4"]]
   :eastwood {:exclude-namespaces [metadata.routes.schemas.template
                                   metadata.routes.schemas.permanent-id-requests
