@@ -20,6 +20,19 @@
   ;; uberjar. Their project.clj files no longer declare it; the fix simply has
   ;; not been released yet. Drop this once those artifacts are re-released.
   :exclusions [cider/cider-nrepl]
+  ;; These are the versions Leiningen already resolves today -- they are read
+  ;; off the resolved classpath, not copied from lein's "Consider using these
+  ;; :managed-dependencies" hint, which names the version that LOST the
+  ;; conflict and would therefore be a silent upgrade. Pinning the resolved
+  ;; version records the existing choice as deliberate and leaves the runtime
+  ;; classpath byte-for-byte unchanged. Re-derive this block whenever one of
+  ;; the dependencies that arbitrates it is bumped.
+  :managed-dependencies [[clj-http "3.13.0"]
+                         [com.fasterxml.jackson.core/jackson-annotations "2.13.5"]
+                         [com.google.errorprone/error_prone_annotations "2.21.1"]
+                         [commons-codec "1.16.1"]
+                         [org.checkerframework/checker-qual "3.37.0"]
+                         [prismatic/schema "1.1.12"]]
   :dependencies [[org.clojure/clojure "1.12.5"]
                  [net.sourceforge.owlapi/owlapi-api "5.5.1"
                   :exclusions [[org.slf4j/slf4j-api] [commons-io]]]
