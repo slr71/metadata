@@ -13,6 +13,13 @@
   :license {:name "BSD Standard License"
             :url "https://cyverse.org/license"}
   :manifest {"Git-Ref" ~(git-ref)}
+  ;; XXX(cider-leak): several published org.cyverse artifacts (clojure-commons
+  ;; 3.0.12, common-cfg 2.8.3, common-cli 2.8.2, kameleon 3.0.10 and
+  ;; service-logging 2.8.5) carry cider/cider-nrepl 0.49.1 at compile scope in
+  ;; their poms, so a REPL tool ends up on the runtime classpath and in the
+  ;; uberjar. Their project.clj files no longer declare it; the fix simply has
+  ;; not been released yet. Drop this once those artifacts are re-released.
+  :exclusions [cider/cider-nrepl]
   :dependencies [[org.clojure/clojure "1.12.5"]
                  [net.sourceforge.owlapi/owlapi-api "5.5.1"
                   :exclusions [[org.slf4j/slf4j-api] [commons-io]]]
