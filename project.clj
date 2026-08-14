@@ -13,6 +13,9 @@
   :license {:name "BSD Standard License"
             :url "https://cyverse.org/license"}
   :manifest {"Git-Ref" ~(git-ref)}
+  ;; Fail the build on a new dependency conflict rather than printing a warning
+  ;; nobody reads. If this ever aborts, re-derive :managed-dependencies below.
+  :pedantic? :abort
   ;; XXX(cider-leak): several published org.cyverse artifacts (clojure-commons
   ;; 3.0.12, common-cfg 2.8.3, common-cli 2.8.2, kameleon 3.0.10 and
   ;; service-logging 2.8.5) carry cider/cider-nrepl 0.49.1 at compile scope in
@@ -27,8 +30,17 @@
   ;; version records the existing choice as deliberate and leaves the runtime
   ;; classpath byte-for-byte unchanged. Re-derive this block whenever one of
   ;; the dependencies that arbitrates it is bumped.
+  ;; The jackson-* artifacts are the one group that must move together: mixing
+  ;; minors across core/databind/annotations risks NoSuchMethodError at runtime
+  ;; rather than a resolution failure. cheshire 6.2.0 brings core/cbor/smile at
+  ;; 2.21.1, so databind is aligned to match and jackson-annotations is pinned
+  ;; to the 2.21 that databind 2.21.1 asks for (annotations uses a minor-only
+  ;; version scheme). Without this, owlapi-rio's transitive 2.13.5 wins by
+  ;; nearest-wins and pairs 2.13 annotations with 2.21 databind.
   :managed-dependencies [[clj-http "3.13.0"]
-                         [com.fasterxml.jackson.core/jackson-annotations "2.13.5"]
+                         [com.fasterxml.jackson.core/jackson-annotations "2.21"]
+                         [com.fasterxml.jackson.core/jackson-core "2.21.1"]
+                         [com.fasterxml.jackson.core/jackson-databind "2.21.1"]
                          [com.google.errorprone/error_prone_annotations "2.21.1"]
                          [commons-codec "1.16.1"]
                          [org.checkerframework/checker-qual "3.37.0"]
